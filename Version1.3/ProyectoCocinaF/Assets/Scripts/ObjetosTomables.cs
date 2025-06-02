@@ -15,7 +15,7 @@ public class ObjetosTomables : MonoBehaviour
     {
         if (!other.CompareTag("Player")) return;
 
-        SaludP salud = other.GetComponent<SaludP>();
+        ControladorObjetos salud = other.GetComponent<ControladorObjetos>();
 
         switch (tipo)
         {
@@ -28,35 +28,38 @@ public class ObjetosTomables : MonoBehaviour
                 break;
 
             case TipoObjeto.Lampara:
-                
                 Transform lamparaMano = BuscarHijo(other.transform, "LamparaMano");
 
                 if (lamparaMano != null)
-                {
+                {   
+                    if (lamparaMano.gameObject.activeSelf)
+            return;
+            
                     lamparaMano.gameObject.SetActive(true);
+
+                    if (salud != null)
+                        salud.MostrarIconoLampara();
+
                     Destroy(gameObject);
                 }
-                else
-                {
-                    Debug.LogWarning("No se encontró 'LamparaMano' en el jugador " + other.name);
-                }
                 break;
-        }
-    }
 
-    
-    Transform BuscarHijo(Transform padre, string nombreBuscado)
-    {
-        foreach (Transform hijo in padre)
+        }
+
+
+        Transform BuscarHijo(Transform padre, string nombreBuscado)
         {
-            if (hijo.name == nombreBuscado)
-                return hijo;
+            foreach (Transform hijo in padre)
+            {
+                if (hijo.name == nombreBuscado)
+                    return hijo;
 
-            Transform resultado = BuscarHijo(hijo, nombreBuscado);
-            if (resultado != null)
-                return resultado;
+                Transform resultado = BuscarHijo(hijo, nombreBuscado);
+                if (resultado != null)
+                    return resultado;
+            }
+
+            return null;
         }
-
-        return null;
     }
 }

@@ -17,15 +17,15 @@ public class MovimientoJugador : MonoBehaviour
     private bool estabaCaminando = false;
 
     public Transform verificadorSuelo;
-    public float distanciaSuelo = 0.4f;  // Asegúrate de que este valor sea adecuado
+    public float distanciaSuelo = 0.4f;  
     public LayerMask capaSuelo;
 
-    private Animator animator;  // Referencia al Animator
+    private Animator animator; 
 
     void Start()
     {
         controlador = GetComponent<CharacterController>();
-        animator = GetComponent<Animator>();  // Obtener el componente Animator
+        animator = GetComponent<Animator>();  
         audioManager = FindObjectOfType<ControladorSonidoPasos>();
 
     }
@@ -37,7 +37,7 @@ public class MovimientoJugador : MonoBehaviour
         if (enSuelo && velocidadY.y < 0)
             velocidadY.y = -2f;  // Aseguramos que la velocidad en el eje Y se ajuste cuando esté en el suelo
 
-        // Actualizar el parámetro "Ensuelo" en el Animator
+        
         animator.SetBool("Ensuelo", enSuelo);
 
         // Leer la entrada del jugador
@@ -46,7 +46,7 @@ public class MovimientoJugador : MonoBehaviour
 
         Vector3 direccionEntrada = new Vector3(inputX, 0, inputZ).normalized;
 
-        // Actualizar el parámetro "Movement" en el Animator
+        
         if (direccionEntrada.magnitude > 0.1f)
         {
             animator.SetFloat("Movement", 1f); // El jugador se está moviendo
@@ -95,33 +95,6 @@ public class MovimientoJugador : MonoBehaviour
         }
 
         estabaCaminando = caminandoAhora;
-
-// PRUEBA de daño y curación con teclas
-if (prefijoEntrada == "P1")
-{
-    if (Input.GetKeyDown(KeyCode.H))
-    {
-        GetComponent<SaludP>().RecibirDanio(1);
-    }
-
-    if (Input.GetKeyDown(KeyCode.J))
-    {
-        GetComponent<SaludP>().Curar(1);
-    }
-}
-
-if (prefijoEntrada == "P2")
-{
-    if (Input.GetKeyDown(KeyCode.Keypad1))
-    {
-        GetComponent<SaludP>().RecibirDanio(1);
-    }
-
-    if (Input.GetKeyDown(KeyCode.Keypad2))
-    {
-        GetComponent<SaludP>().Curar(1);
-    }
-}
 
 
     }
