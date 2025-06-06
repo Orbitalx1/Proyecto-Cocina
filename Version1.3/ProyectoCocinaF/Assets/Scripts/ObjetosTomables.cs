@@ -1,11 +1,14 @@
 using UnityEngine;
 
+
 public class ObjetosTomables : MonoBehaviour
 {
+    private bool tieneObjetoEspecial = false;
     public enum TipoObjeto
     {
         Curativo,
-        Lampara
+        Lampara,
+        Llave
     }
 
     public TipoObjeto tipo = TipoObjeto.Curativo;
@@ -30,19 +33,26 @@ public class ObjetosTomables : MonoBehaviour
             case TipoObjeto.Lampara:
                 Transform lamparaMano = BuscarHijo(other.transform, "LamparaMano");
 
-                if (lamparaMano != null)
-                {   
-                    if (lamparaMano.gameObject.activeSelf)
-            return;
-            
-                    lamparaMano.gameObject.SetActive(true);
+                if (lamparaMano != null && salud != null)
+{
+    if (lamparaMano.gameObject.activeSelf || salud.TieneLlave)
+        return;
 
-                    if (salud != null)
-                        salud.MostrarIconoLampara();
-
-                    Destroy(gameObject);
-                }
+    lamparaMano.gameObject.SetActive(true);
+    salud.MostrarIconoLampara();
+    Destroy(gameObject);
+}
                 break;
+                
+                case TipoObjeto.Llave:
+    if (salud != null && !salud.TieneLlave && !salud.GetTieneLampara())
+{
+    salud.MostrarIconoLlave();
+    Destroy(gameObject);
+}
+
+    break;
+
 
         }
 

@@ -3,6 +3,8 @@ using UnityEngine.UI;
 
 public class ControladorObjetos : MonoBehaviour
 {
+    private bool tieneObjetoEspecial = false;
+
     [Header("Vida del jugador")]
     public int corazonesMaximos = 5;               // Total de corazones
     public int corazonesActuales = 5;              // Corazones activos al inicio
@@ -18,8 +20,15 @@ public class ControladorObjetos : MonoBehaviour
     public Sprite iconoLampara;         
     private bool lamparaMostrada = false; 
 
-    private float tiempoLamparaRestante = 20f;
+    private float tiempoLamparaRestante;
     private Transform lamparaMano;
+    private Transform llaveMano;
+
+    [Header("Llave")]
+public Sprite iconoLlave;
+private bool llaveMostrada = false;
+public bool TieneLlave => llaveMostrada;
+
 
     void Start()
     {
@@ -73,30 +82,81 @@ public class ControladorObjetos : MonoBehaviour
 
 
     public void MostrarIconoLampara()
-    {
-        if (lamparaMostrada || iconoLampara == null || panelObjetos == null) return;
+{
+    if (tieneObjetoEspecial || lamparaMostrada || iconoLampara == null || panelObjetos == null) return;
 
-        GameObject icono = new GameObject("IconoLampara");
-        icono.transform.SetParent(panelObjetos, false);
+    GameObject icono = new GameObject("IconoLampara");
+    icono.transform.SetParent(panelObjetos, false);
 
-        Image img = icono.AddComponent<UnityEngine.UI.Image>();
-        img.sprite = iconoLampara;
+    Image img = icono.AddComponent<UnityEngine.UI.Image>();
+    img.sprite = iconoLampara;
 
-        RectTransform rt = img.GetComponent<RectTransform>();
-        rt.sizeDelta = new Vector2(32, 32); // Tamaño del ícono
+    RectTransform rt = img.GetComponent<RectTransform>();
+    rt.sizeDelta = new Vector2(32, 32);
 
-        lamparaMostrada = true;
-        tiempoLamparaRestante = 10f;
-    }
+    lamparaMostrada = true;
+    tieneObjetoEspecial = true;
+    tiempoLamparaRestante = 10; // Reiniciar el tiempo de la lampara
+
+    if (lamparaMano == null)
+        lamparaMano = BuscarHijo(transform, "LamparaMano");
+
+    if (lamparaMano != null)
+        lamparaMano.gameObject.SetActive(true);
+}
+
     public void OcultarIconoLampara()
     {
-    Transform icono = panelObjetos.Find("IconoLampara");
+   Transform icono = panelObjetos.Find("IconoLampara");
     if (icono != null)
         Destroy(icono.gameObject);
 
     lamparaMostrada = false;
+    tieneObjetoEspecial = false;
     }
-    
+    public void MostrarIconoLlave()
+{
+    if (tieneObjetoEspecial || llaveMostrada || iconoLlave == null || panelObjetos == null) return;
+
+    GameObject icono = new GameObject("IconoLlave");
+    icono.transform.SetParent(panelObjetos, false);
+
+    Image img = icono.AddComponent<Image>();
+    img.sprite = iconoLlave;
+
+    RectTransform rt = img.GetComponent<RectTransform>();
+    rt.sizeDelta = new Vector2(32, 32);
+
+    llaveMostrada = true;
+    tieneObjetoEspecial = true;
+
+    if (llaveMano == null)
+        llaveMano = BuscarHijo(transform, "LlaveMano");
+
+    if (llaveMano != null)
+        llaveMano.gameObject.SetActive(true);
+}
+    public void OcultarIconoLlave()
+{
+    Transform icono = panelObjetos.Find("IconoLlave");
+    if (icono != null)
+        Destroy(icono.gameObject);
+
+    if (llaveMano == null)
+        llaveMano = BuscarHijo(transform, "LlaveMano");
+
+    if (llaveMano != null)
+        llaveMano.gameObject.SetActive(false);
+
+    llaveMostrada = false;
+    tieneObjetoEspecial = false;
+}
+public bool GetTieneLampara()
+{
+    return lamparaMostrada;
+}
+
+
     private Transform BuscarHijo(Transform padre, string nombreBuscado)
     {
         foreach (Transform hijo in padre)
