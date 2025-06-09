@@ -1,5 +1,8 @@
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
+using TMPro; 
+using System.Collections;
 
 public class ControladorObjetos : MonoBehaviour
 {
@@ -28,6 +31,9 @@ public class ControladorObjetos : MonoBehaviour
 public Sprite iconoLlave;
 private bool llaveMostrada = false;
 public bool TieneLlave => llaveMostrada;
+[Header("Muerte")]
+public GameObject mensajeMoriste;  
+
 
 
     void Start()
@@ -65,12 +71,17 @@ public bool TieneLlave => llaveMostrada;
     }
 
     public void RecibirDaño(int cantidad)
-    {
-        corazonesActuales -= cantidad;
-        corazonesActuales = Mathf.Clamp(corazonesActuales, 0, corazonesMaximos);
-        ActualizarUI();
+{
+    corazonesActuales -= cantidad;
+    corazonesActuales = Mathf.Clamp(corazonesActuales, 0, corazonesMaximos);
+    ActualizarUI();
 
+    if (corazonesActuales <= 0)
+    {
+        Morir();
     }
+}
+
 
     public void Curar(int cantidad)
     {
@@ -196,6 +207,22 @@ void OnTriggerEnter(Collider other)
     {
         RecibirDaño(1); 
     }
+}
+
+void Morir()
+{
+    if (mensajeMoriste != null)
+        mensajeMoriste.SetActive(true);
+
+Time.timeScale = 0f;
+    StartCoroutine(EsperarYReiniciar());
+}
+
+IEnumerator EsperarYReiniciar()
+{
+    yield return new WaitForSecondsRealtime(2f);
+    Time.timeScale = 1f;
+    SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
 }
 
 

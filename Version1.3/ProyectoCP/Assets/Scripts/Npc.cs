@@ -1,17 +1,19 @@
 using UnityEngine;
-using UnityEngine.UI; // si usas Text legacy
+using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class Npc : MonoBehaviour
 {
     public GameObject mensajeUI; 
+    public string nombreEscena = "Nivel1"; // Cambia esto en el Inspector por cada NPC
     private bool jugadorCerca = false;
 
     void Update()
     {
         if (jugadorCerca && Input.GetKeyDown(KeyCode.E))
         {
-            Debug.Log("Interacción con NPC");
-            // Agragar para niveles futuros
+            Debug.Log("Interacción con NPC - Cargando escena: " + nombreEscena);
+            SceneManager.LoadScene(nombreEscena);
         }
     }
 

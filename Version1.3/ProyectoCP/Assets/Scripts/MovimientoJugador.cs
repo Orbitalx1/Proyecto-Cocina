@@ -98,5 +98,19 @@ public class MovimientoJugador : MonoBehaviour
 
 
     }
+
+    void OnControllerColliderHit(ControllerColliderHit contacto)
+{
+    Rigidbody rb = contacto.collider.attachedRigidbody;
+
+    if (rb == null || rb.isKinematic)
+        return;
+
+    Vector3 fuerzaEmpuje = new Vector3(contacto.moveDirection.x, 0, contacto.moveDirection.z);
+    float fuerza = 1f;
+    rb.AddForce(fuerzaEmpuje * fuerza, ForceMode.Impulse);
+}
+
+
     
 }

@@ -16,10 +16,28 @@ public class SeguirJugador : MonoBehaviour
     [Header("Detección de colisiones")]
     public LayerMask capaObstaculos;
 
+    [Header("Restricciones")]
+    public float distanciaMaximaJugadores = 15f; // <- NUEVA VARIABLE
+
     void LateUpdate()
     {
         if (jugador1 == null || jugador2 == null)
             return;
+
+        // Evita que se alejen más de la distancia permitida
+        Vector3 posicion1 = jugador1.position;
+        Vector3 posicion2 = jugador2.position;
+        float distanciaEntreJugadores = Vector3.Distance(posicion1, posicion2);
+
+        if (distanciaEntreJugadores > distanciaMaximaJugadores)
+        {
+            Vector3 direccion = (posicion2 - posicion1).normalized;
+            float exceso = distanciaEntreJugadores - distanciaMaximaJugadores;
+
+            // Mover jugador2 hacia jugador1 (puedes invertir esto o hacer un promedio)
+            jugador2.position -= direccion * (exceso / 2f);
+            jugador1.position += direccion * (exceso / 2f);
+        }
 
         Vector3 puntoMedio = (jugador1.position + jugador2.position) / 2f;
 
@@ -28,7 +46,6 @@ public class SeguirJugador : MonoBehaviour
 
         Vector3 posicionDeseada = puntoMedio + direccionOffset * distancia;
 
-        // Ajuste dinámico de altura basado en la altura real de los jugadores
         float alturaMedia = (jugador1.position.y + jugador2.position.y) / 2f;
         posicionDeseada.y = alturaMedia + altura;
 
@@ -44,3 +61,4 @@ public class SeguirJugador : MonoBehaviour
         transform.LookAt(puntoMedio);
     }
 }
+

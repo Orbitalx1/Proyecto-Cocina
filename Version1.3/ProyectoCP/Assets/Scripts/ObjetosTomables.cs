@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class ObjetosTomables : MonoBehaviour
 {
+    public Respawn spawner; 
     private bool tieneObjetoEspecial = false;
     public enum TipoObjeto
     {
@@ -40,6 +41,8 @@ public class ObjetosTomables : MonoBehaviour
 
     lamparaMano.gameObject.SetActive(true);
     salud.MostrarIconoLampara();
+    if (spawner != null)
+    spawner.IniciarRespawn();
     Destroy(gameObject);
 }
                 break;
